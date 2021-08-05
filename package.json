@@ -1,0 +1,25 @@
+{
+  "name": "parkourbot-v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "dependencies": {
+    "discord.js": "^13.0.0-dev.t1628165339.3eb4140",
+    "dotenv": "^10.0.0",
+    "typescript": "^4.3.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "nodemon .\\\\built\\\\index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M1x3l/ParkourBot-v2.git"
+  },
+  "author": "M1x3l; Steveplays28",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/M1x3l/ParkourBot-v2/issues"
+  },
+  "homepage": "https://github.com/M1x3l/ParkourBot-v2#readme"
+}
