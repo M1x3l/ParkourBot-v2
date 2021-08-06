@@ -1,19 +1,21 @@
 import { Collection, Guild } from 'discord.js';
 import { CommandFile } from './Types';
-import { readdirSync } from 'fs';
+import { readdir } from 'fs';
 import { join } from 'path';
 
 //#region commands
 let commands = new Collection<string, CommandFile>();
 
-const commandFiles = readdirSync(join(__dirname, 'commands')).filter((file) =>
-  file.endsWith('.js')
-);
+readdir(join(__dirname, 'commands'), (err, files) => {
+  if (err) console.error(err);
 
-for (const file of commandFiles) {
-  const command = require(join(__dirname, 'commands', file)).file;
-  commands.set(command.name, command);
-}
+  const commandFiles = files.filter((file) => file.endsWith('.js'));
+  for (const file of commandFiles) {
+    const command = require(join(__dirname, 'commands', file)).file;
+    commands.set(command.name, command);
+  }
+});
+
 //#endregion
 
 //#region updateMemberCount
