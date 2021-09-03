@@ -77,3 +77,6 @@ typings/
 
 # Output files
 built
+
+# User specific files
+exec.ts

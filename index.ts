@@ -20,7 +20,9 @@ client.once('ready', () => {
 		['774265785455083531', '796365707976900649'].includes(guild.id)
 	);
 
-	guild.each((guild) =>
+	guild.each(async (guild) => {
+		// await guild.commands.set([]);
+
 		commands.each((command) => {
 			guild.commands.create({
 				name: command.name,
@@ -28,8 +30,8 @@ client.once('ready', () => {
 				options: command.options,
 				defaultPermission: command.defaultPermission,
 			});
-		})
-	);
+		});
+	});
 });
 
 client.on('interactionCreate', async (interaction) => {
