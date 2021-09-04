@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 config();
 import { Client } from 'discord.js';
 
-import { commands } from './Util';
+import { commands, updateMemberCountAll } from './Util';
 //#region events
 import * as interactionCreate from './events/interactionCreate';
 import * as guildMemberAdd from './events/guildMemberAdd';
@@ -14,7 +14,9 @@ const client = new Client({
 });
 
 client.once('ready', () => {
-	console.log(`Bot logged in as ${client.user?.tag}`);
+	console.log(
+		'[' + client.user?.username + '] ' + 'bot logged in successfully!'
+	);
 
 	const guild = client.guilds.cache.filter((guild) =>
 		['774265785455083531', '796365707976900649'].includes(guild.id)
@@ -30,8 +32,10 @@ client.once('ready', () => {
 				options: command.options,
 				defaultPermission: command.defaultPermission,
 			});
-		});
-	});
+		})
+	);
+
+	updateMemberCountAll();
 });
 
 client.on('interactionCreate', async (interaction) => {
@@ -46,3 +50,5 @@ client.on('guildMemberRemove', async (member) => {
 });
 
 client.login(process.env.TOKEN);
+
+export { client };
