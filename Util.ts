@@ -1,7 +1,16 @@
-import { Collection, Guild } from 'discord.js';
+import {
+	ChannelManager,
+	Collection,
+	Guild,
+	GuildChannel,
+	GuildChannelManager,
+} from 'discord.js';
 import { CommandFile } from './Types';
 import { readdir } from 'fs';
 import { join } from 'path';
+
+import { memberCountVoiceChannelIDs } from './botconfig';
+import { client } from './index';
 
 //#region commands
 let commands = new Collection<string, CommandFile>();
@@ -15,17 +24,57 @@ readdir(join(__dirname, 'commands'), (err, files) => {
 		commands.set(command.name, command);
 	}
 });
-
 //#endregion
 
 //#region updateMemberCount
 async function updateMemberCount(guild: Guild) {
-	const memberCount = guild.memberCount;
-	const memberCountChannel = guild.channels.cache.find((channel) =>
-		/Member Count: (\d*|undefined)/.test(channel.name)
+	// Check if the guild is available
+	if (guild.available == false) {
+		return;
+	}
+
+	// Find voice channel that belongs to the guild, and update it
+	for (let i = 0; i < memberCountVoiceChannelIDs.length; i++) {
+		var channel = client.channels.cache.get(
+			memberCountVoiceChannelIDs[i]
+		) as GuildChannel;
+		if (channel == undefined) {
+			continue;
+		}
+
+		var guild = channel.guild;
+
+		var memberCount = guild.memberCount;
+		var newChannelName =
+			channel.name.replace(/\d+/g, '').trim() + ' ' + memberCount;
+
+		channel.edit({ name: newChannelName });
+
+		console.log(
+			'[' + client.user?.username + '] ' + 'member count updated in server ' + guild.id + '!'
+		);
+	}
+}
+
+async function updateMemberCountAll() {
+	// Iterate through all voice channels and update them (as defined in botconfig.ts)
+	for (let i = 0; i < memberCountVoiceChannelIDs.length; i++) {
+		var channel = client.channels.cache.get(
+			memberCountVoiceChannelIDs[i]
+		) as GuildChannel;
+		var guild = channel.guild;
+
+		var memberCount = guild.memberCount;
+		var newChannelName =
+			channel.name.replace(/\d+/g, '').trim() + ' ' + memberCount;
+
+		channel.edit({ name: newChannelName });
+	}
+
+	console.log(
+		'[' + client.user?.username + '] ' + 'member count updated in all servers!'
 	);
-	memberCountChannel?.edit({ name: `Member Count: ${memberCount}` });
 }
 //#endregion
 
-export { commands, updateMemberCount };
+export { commands, updateMemberCount, updateMemberCountAll };
