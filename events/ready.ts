@@ -22,5 +22,10 @@ export async function run(client: Client) {
 		});
 	});
 
+	// Set rich presence
+	client.user?.setActivity("over Steve's server because I can :)", {
+		type: 'WATCHING',
+	});
+
 	updateMemberCountAll(client);
 }
