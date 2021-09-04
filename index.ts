@@ -11,7 +11,7 @@ import * as guildMemberRemove from './events/guildMemberRemove';
 //#endregion
 
 const client = new Client({
-	intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES'],
+	intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 'GUILD_PRESENCES'],
 });
 
 client.once('ready', () => {
@@ -34,6 +34,12 @@ client.once('ready', () => {
 		});
 	});
 
+	// Set rich presence
+	client.user?.setActivity("over Steve's server because I can :)", {
+		type: 'WATCHING',
+	});
+
+	// Update member count VCs in all servers
 	updateMemberCountAll(client);
 });
 
