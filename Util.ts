@@ -40,7 +40,7 @@ async function updateMemberCount(guild: Guild) {
 
 			logBot(
 				guild.client,
-				`Member count updated in ${guild.id} (${guild.name})`
+				`Member count updated in ${guild.name} (${guild.id})`
 			);
 		}
 	});
@@ -54,7 +54,7 @@ async function updateMemberCountAll(client: Client) {
 		channel.edit({ name: generateMemberCountChannelName(channel) });
 	});
 
-	logBot(client, `Member count updated in all server`);
+	logBot(client, `Member count updated in all servers`);
 }
 
 const generateMemberCountChannelName = (channel: GuildChannel) =>

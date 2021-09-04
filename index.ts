@@ -4,7 +4,7 @@ import { EventManager } from './EventManager';
 config();
 
 const client = new Client({
-	intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES'],
+	intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 'GUILD_PRESENCES'],
 });
 
 EventManager(client);

@@ -1,5 +1,6 @@
-import { CommandInteraction, Interaction, MessageEmbed } from 'discord.js';
-import { ChatInputCommandFile } from '../Types';
+import { ColorResolvable, CommandInteraction, Interaction, MessageEmbed } from 'discord.js';
+import { CommandFile } from '../Types';
+import { embedColors } from '../botconfig';
 
 export const file: ChatInputCommandFile = {
 	name: 'ping',
@@ -7,12 +8,10 @@ export const file: ChatInputCommandFile = {
 
 	run: async (interaction: CommandInteraction) => {
 		// Check if guild is available
-		if (!interaction.guild?.available) {
-			return;
-		}
+		if (!interaction.guild?.available) return;
 
-		var latency = Date.now() - interaction.createdTimestamp;
-		var latencyText = '';
+		let latency = Date.now() - interaction.createdTimestamp;
+		let latencyText = '';
 
 		if (latency <= 500) {
 			latencyText = 'Response time is good.';
@@ -24,7 +23,7 @@ export const file: ChatInputCommandFile = {
 
 		// Create embed
 		const embed = new MessageEmbed()
-			.setColor('#0099ff')
+			.setColor(embedColors[0] as ColorResolvable)
 			.setTitle(`Roundtrip latency: ${latency}ms`)
 			.setDescription(`${latencyText}`)
 			.addField('\u200B', '_ _')
