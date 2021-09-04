@@ -1,6 +1,6 @@
 import { Client } from 'discord.js';
 import { logBot } from '../Loggers';
-import { commands, updateMemberCountAll } from '../Util';
+import { chatInputCommands, updateMemberCountAll } from '../Util';
 
 export async function run(client: Client) {
 	logBot(client, 'Bot logged in successfully');
@@ -12,7 +12,7 @@ export async function run(client: Client) {
 	guild.each(async (guild) => {
 		// await guild.commands.set([]);
 
-		commands.each((command) => {
+		chatInputCommands.each((command) => {
 			guild.commands.create({
 				name: command.name,
 				description: command.description,

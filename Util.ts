@@ -1,5 +1,10 @@
 import { Client, Collection, Guild, GuildChannel } from 'discord.js';
-import { CommandFile, Task } from './Types';
+import {
+	/* UserCommandFile,
+	MessageCommandFile, */
+	ChatInputCommandFile,
+	Task,
+} from './Types';
 import { readdir } from 'fs';
 import { join } from 'path';
 import { config } from 'dotenv';
@@ -8,7 +13,7 @@ import { logBot } from './Loggers';
 config();
 
 //#region commands
-const commands = new Collection<string, CommandFile>();
+const chatInputCommands = new Collection<string, ChatInputCommandFile>();
 
 readdir(join(__dirname, 'commands'), (err, files) => {
 	if (err) console.error(err);
@@ -16,7 +21,7 @@ readdir(join(__dirname, 'commands'), (err, files) => {
 	const commandFiles = files.filter((file) => file.endsWith('.js'));
 	for (const file of commandFiles) {
 		const command = require(join(__dirname, 'commands', file)).file;
-		commands.set(command.name, command);
+		chatInputCommands.set(command.name, command);
 	}
 });
 //#endregion
@@ -78,7 +83,7 @@ async function createTask(data: Task) {
 //#endregion
 
 export {
-	commands,
+	chatInputCommands,
 	updateMemberCount,
 	updateMemberCountAll,
 	getTasks,

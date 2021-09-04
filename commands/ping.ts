@@ -1,7 +1,7 @@
 import { CommandInteraction, Interaction, MessageEmbed } from 'discord.js';
-import { CommandFile } from '../Types';
+import { ChatInputCommandFile } from '../Types';
 
-export const file: CommandFile = {
+export const file: ChatInputCommandFile = {
 	name: 'ping',
 	description: 'Ping pong! Checks the API latency.',
 

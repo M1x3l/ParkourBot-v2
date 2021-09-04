@@ -1,8 +1,7 @@
 import { config } from 'dotenv';
-config();
 import { Client } from 'discord.js';
-import { logBot } from './Loggers';
 import { EventManager } from './EventManager';
+config();
 
 const client = new Client({
 	intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES'],
