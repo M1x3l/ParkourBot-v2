@@ -1,5 +1,5 @@
 import { CommandInteraction } from 'discord.js';
-import { ChatInputCommandFile } from '../Types';
+import { ChatInputCommandFile } from '../../Types';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 

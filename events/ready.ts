@@ -1,6 +1,11 @@
 import { Client } from 'discord.js';
 import { logBot } from '../Loggers';
-import { chatInputCommands, updateMemberCountAll } from '../Util';
+import {
+	chatInputCommands,
+	messageCommands,
+	updateMemberCountAll,
+	userCommands,
+} from '../Util';
 
 export async function run(client: Client) {
 	logBot(client, 'Bot logged in successfully');
@@ -17,6 +22,20 @@ export async function run(client: Client) {
 				name: command.name,
 				description: command.description,
 				options: command.options,
+				defaultPermission: command.defaultPermission,
+			});
+		});
+		messageCommands.each((command) => {
+			guild.commands.create({
+				name: command.name,
+				type: command.type,
+				defaultPermission: command.defaultPermission,
+			});
+		});
+		userCommands.each((command) => {
+			guild.commands.create({
+				name: command.name,
+				type: command.type,
 				defaultPermission: command.defaultPermission,
 			});
 		});

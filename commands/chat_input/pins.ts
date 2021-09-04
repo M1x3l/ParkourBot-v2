@@ -1,7 +1,7 @@
 import { CommandInteraction, MessageEmbed } from 'discord.js';
-import { ChatInputCommandFile } from '../Types';
+import { ChatInputCommandFile } from '../../Types';
 
-export const file: CommandFile = {
+export const file: ChatInputCommandFile = {
 	name: 'pins',
 	description: 'Tell somebody, they should read the pinned messages',
 	options: [

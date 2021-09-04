@@ -1,6 +1,6 @@
 import { CommandInteraction, MessageEmbed } from 'discord.js';
-import { ChatInputCommandFile } from '../Types';
-import { createTask } from '../Util';
+import { ChatInputCommandFile } from '../../Types';
+import { createTask } from '../../Util';
 
 export const file: ChatInputCommandFile = {
 	name: 'suggest',

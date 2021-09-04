@@ -1,6 +1,11 @@
-import { ColorResolvable, CommandInteraction, Interaction, MessageEmbed } from 'discord.js';
-import { CommandFile } from '../Types';
-import { embedColors } from '../botconfig';
+import {
+	ColorResolvable,
+	CommandInteraction,
+	Interaction,
+	MessageEmbed,
+} from 'discord.js';
+import { ChatInputCommandFile } from '../../Types';
+import { embedColors } from '../../botconfig';
 
 export const file: ChatInputCommandFile = {
 	name: 'ping',

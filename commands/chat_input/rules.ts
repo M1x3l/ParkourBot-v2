@@ -1,5 +1,5 @@
 import { CommandInteraction, MessageEmbed } from 'discord.js';
-import { ChatInputCommandFile } from '../Types';
+import { ChatInputCommandFile } from '../../Types';
 
 export const file: ChatInputCommandFile = {
 	name: 'rules',

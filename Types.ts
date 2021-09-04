@@ -1,22 +1,17 @@
 import {
 	CommandInteraction,
-	/* 	MessageApplicationCommandData,
+	MessageApplicationCommandData,
 	UserApplicationCommandData,
-	ChatInputApplicationCommandData, */
-	ApplicationCommandData,
+	ChatInputApplicationCommandData,
 } from 'discord.js';
 
-/* export interface MessageCommandFile extends MessageApplicationCommandData {
+export interface MessageCommandFile extends MessageApplicationCommandData {
 	run: (interaction: CommandInteraction) => Promise<void>;
 }
 export interface UserCommandFile extends UserApplicationCommandData {
 	run: (interaction: CommandInteraction) => Promise<void>;
 }
 export interface ChatInputCommandFile extends ChatInputApplicationCommandData {
-	run: (interaction: CommandInteraction) => Promise<void>;
-} */
-
-export interface ChatInputCommandFile extends ApplicationCommandData {
 	run: (interaction: CommandInteraction) => Promise<void>;
 }
 

@@ -1,29 +1,75 @@
-import { Client, Collection, Guild, GuildChannel } from 'discord.js';
 import {
-	/* UserCommandFile,
-	MessageCommandFile, */
+	Client,
+	Collection,
+	ColorResolvable,
+	CommandInteraction,
+	Guild,
+	GuildChannel,
+	MessageEmbed,
+} from 'discord.js';
+import {
+	UserCommandFile,
+	MessageCommandFile,
 	ChatInputCommandFile,
 	Task,
 } from './Types';
 import { readdir } from 'fs';
 import { join } from 'path';
 import { config } from 'dotenv';
-import { memberCountVoiceChannelIDs } from './botconfig';
+import {
+	memberCountVoiceChannelIDs,
+	embedColors,
+	boolToEmojiMap,
+} from './botconfig';
 import { logBot } from './Loggers';
 config();
 
 //#region commands
 const chatInputCommands = new Collection<string, ChatInputCommandFile>();
+const messageCommands = new Collection<string, MessageCommandFile>();
+const userCommands = new Collection<string, UserCommandFile>();
 
-readdir(join(__dirname, 'commands'), (err, files) => {
+readdir(join(__dirname, 'commands', 'chat_input'), (err, files) => {
+	if (!files) return;
+
 	if (err) console.error(err);
 
 	const commandFiles = files.filter((file) => file.endsWith('.js'));
 	for (const file of commandFiles) {
-		const command = require(join(__dirname, 'commands', file)).file;
+		const command = require(join(
+			__dirname,
+			'commands',
+			'chat_input',
+			file
+		)).file;
 		chatInputCommands.set(command.name, command);
 	}
 });
+
+readdir(join(__dirname, 'commands', 'message'), (err, files) => {
+	if (!files) return;
+
+	if (err) console.error(err);
+
+	const commandFiles = files.filter((file) => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const command = require(join(__dirname, 'commands', 'message', file)).file;
+		messageCommands.set(command.name, command);
+	}
+});
+
+readdir(join(__dirname, 'commands', 'user'), (err, files) => {
+	if (!files) return;
+
+	if (err) console.error(err);
+
+	const commandFiles = files.filter((file) => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const command = require(join(__dirname, 'commands', 'user', file)).file;
+		userCommands.set(command.name, command);
+	}
+});
+
 //#endregion
 
 //#region updateMemberCount
@@ -82,11 +128,79 @@ async function createTask(data: Task) {
 }
 //#endregion
 
+//#region commandHelpers
+function generateUserInfoEmbed(interaction: CommandInteraction) {
+	if (!interaction.guild?.available) return;
+
+	let user;
+	if (interaction.options.data[0]?.user) {
+		user = interaction.options.data[0]?.user;
+	} else {
+		user = interaction.user;
+	}
+	const guildMember = interaction.guild.members.cache.get(user.id);
+
+	const accountCreatedTimestamp = Math.floor(user.createdTimestamp / 1000);
+	const serverJoinedTimestamp = Math.floor(
+		guildMember?.joinedTimestamp! / 1000
+	);
+
+	let guildMemberStatus = '';
+	if (guildMember?.presence?.status.toString()) {
+		guildMemberStatus = guildMember?.presence?.status.toString();
+	} else {
+		guildMemberStatus = 'offline';
+	}
+	const guildMemberStatusEmoji = guildMember?.guild.emojis.cache
+		.filter((e) => e.name == guildMemberStatus)
+		.first()
+		?.toString();
+
+	let guildMemberActivities;
+	if (
+		guildMember?.presence?.activities &&
+		guildMember?.presence?.activities.length > 0
+	) {
+		guildMemberActivities = guildMember?.presence?.activities
+			.join(', ')
+			.replace('*', '\\*');
+	} else {
+		guildMemberActivities = 'none';
+	}
+
+	const id = user.id;
+	const userIsBot = boolToEmojiMap.get(user.bot);
+
+	// Create embed
+	const embed = new MessageEmbed()
+		.setColor(embedColors[0] as ColorResolvable)
+		.setTitle(`User info for ${user.tag}`)
+		.setDescription(
+			`Status: **${guildMemberStatus}${guildMemberStatusEmoji}** 
+		Activity: **${guildMemberActivities}** 
+		\n Account created: **<t:${accountCreatedTimestamp}>** 
+		Joined server at: **<t:${serverJoinedTimestamp}>**  
+		\n ID: **${id}** 
+		Is bot: **${userIsBot}**`
+		)
+		.setThumbnail(user.avatarURL() as unknown as string)
+		.setFooter(
+			interaction.guild.name,
+			interaction.guild.iconURL() as unknown as string
+		)
+		.setTimestamp();
+	return embed;
+}
+//#endregion
+
 export {
 	chatInputCommands,
+	userCommands,
+	messageCommands,
 	updateMemberCount,
 	updateMemberCountAll,
 	getTasks,
 	filterSuggestions,
 	createTask,
+	generateUserInfoEmbed,
 };
