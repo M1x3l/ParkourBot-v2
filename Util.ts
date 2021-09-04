@@ -140,10 +140,12 @@ function generateUserInfoEmbed(interaction: CommandInteraction) {
 	}
 	const guildMember = interaction.guild.members.cache.get(user.id);
 
-	const accountCreatedTimestamp = Math.floor(user.createdTimestamp / 1000);
-	const serverJoinedTimestamp = Math.floor(
-		guildMember?.joinedTimestamp! / 1000
-	);
+	let guildMemberNickname;
+	if (guildMember?.nickname != null) {
+		guildMemberNickname = guildMember?.nickname;
+	} else {
+		guildMemberNickname = 'none';
+	}
 
 	let guildMemberStatus = '';
 	if (guildMember?.presence?.status.toString()) {
@@ -161,12 +163,27 @@ function generateUserInfoEmbed(interaction: CommandInteraction) {
 		guildMember?.presence?.activities &&
 		guildMember?.presence?.activities.length > 0
 	) {
-		guildMemberActivities = guildMember?.presence?.activities
-			.join(', ')
-			.replace('*', '\\*');
+		guildMemberActivities =
+			'\n- ' +
+			guildMember?.presence?.activities
+				.join('\n- ')
+				.replace('*', '\\*')
+				.replace(
+					'Custom Status',
+					`Custom status: \"${
+						guildMember?.presence?.activities.find(
+							(activity) => activity.type === 'CUSTOM'
+						)?.state
+					}\"`
+				);
 	} else {
 		guildMemberActivities = 'none';
 	}
+
+	const accountCreatedTimestamp = Math.floor(user.createdTimestamp / 1000);
+	const serverJoinedTimestamp = Math.floor(
+		guildMember?.joinedTimestamp! / 1000
+	);
 
 	const id = user.id;
 	const userIsBot = boolToEmojiMap.get(user.bot);
@@ -176,13 +193,18 @@ function generateUserInfoEmbed(interaction: CommandInteraction) {
 		.setColor(embedColors[0] as ColorResolvable)
 		.setTitle(`User info for ${user.tag}`)
 		.setDescription(
-			`Status: **${guildMemberStatus}${guildMemberStatusEmoji}** 
-		Activity: **${guildMemberActivities}** 
-		\n Account created: **<t:${accountCreatedTimestamp}>** 
-		Joined server at: **<t:${serverJoinedTimestamp}>**  
-		\n ID: **${id}** 
-		Is bot: **${userIsBot}**`
+			`Nickname: **${guildMemberNickname}**
+		
+		Status: **${guildMemberStatus}${guildMemberStatusEmoji}**
+		Activity: **${guildMemberActivities}**
+		
+		Account created: **<t:${accountCreatedTimestamp}>**
+		Joined server at: **<t:${serverJoinedTimestamp}>**
+		
+		ID: **${id}**
+		Is bot: **${userIsBot}**`.replace(/\t/g, '')
 		)
+		.addField('\u200b', '_ _')
 		.setThumbnail(user.avatarURL() as unknown as string)
 		.setFooter(
 			interaction.guild.name,
