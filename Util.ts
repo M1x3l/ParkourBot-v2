@@ -48,7 +48,7 @@ function filterSuggestions(data: any) {
 }
 
 async function createTask(data: Task) {
-	clickupClient.lists.createTask('78364866', data);
+	return clickupClient.lists.createTask('78364866', data);
 }
 //#endregion
 

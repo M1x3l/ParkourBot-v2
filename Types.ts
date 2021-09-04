@@ -6,10 +6,17 @@ export interface CommandFile extends ApplicationCommandData {
 
 export interface Task {
 	name: string;
-	description: string;
+	description?: string;
+	markdown_description?: string;
 	tags: string[];
 	status: string;
 	priority?: TaskPriority;
+	custom_fields?: CustomField[];
+}
+
+export interface CustomField {
+	id: string;
+	value: any;
 }
 
 export enum TaskPriority {
