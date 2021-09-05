@@ -20,6 +20,7 @@ import {
 	memberCountVoiceChannelIDs,
 	embedColors,
 	boolToEmojiMap,
+	serverBoostLevelMap,
 } from './botconfig';
 import { logBot } from './Loggers';
 config();
@@ -213,6 +214,44 @@ function generateUserInfoEmbed(interaction: CommandInteraction) {
 		.setTimestamp();
 	return embed;
 }
+
+function generateServerInfoEmbed(interaction: CommandInteraction) {
+	if (!interaction.guild?.available) return;
+
+	const guild = interaction.guild;
+
+	const guildName = guild.name;
+
+	let guildOwner = interaction.guild.members.cache.get(guild.ownerId)?.user.tag;
+	const serverCreatedTimestamp = Math.floor(guild.createdTimestamp / 1000);
+	const id = guild.id;
+
+	const guildMemberCount = guild.memberCount;
+	const guildChannelCount = guild.channels.cache.size;
+	const boostLevel = serverBoostLevelMap.get(guild.premiumTier);
+
+	// Create embed
+	const embed = new MessageEmbed()
+		.setColor(embedColors[0] as ColorResolvable)
+		.setTitle(`Server info for ${guildName}`)
+		.setDescription(
+			`Owner: **${guildOwner}**
+		Server created: **<t:${serverCreatedTimestamp}>**
+		ID: **${id}**
+
+		Members: **${guildMemberCount}**
+		Channels: **${guildChannelCount}**
+		Boost level: **${boostLevel}**`.replace(/\t/g, '')
+		)
+		.addField('\u200b', '_ _')
+		.setThumbnail(guild.iconURL() as unknown as string)
+		.setFooter(
+			interaction.guild.name,
+			interaction.guild.iconURL() as unknown as string
+		)
+		.setTimestamp();
+	return embed;
+}
 //#endregion
 
 export {
@@ -225,4 +264,5 @@ export {
 	filterSuggestions,
 	createTask,
 	generateUserInfoEmbed,
+	generateServerInfoEmbed,
 };

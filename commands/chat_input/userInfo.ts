@@ -14,8 +14,6 @@ export const file: ChatInputCommandFile = {
 	],
 
 	run: async (interaction: CommandInteraction) => {
-		// Check if guild is available
-
 		interaction.reply({
 			embeds: [generateUserInfoEmbed(interaction)!],
 		});

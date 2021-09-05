@@ -13,4 +13,12 @@ const memberCountVoiceChannelIDs = new Array(
 	'815221664320192522' // Bot testing server
 );
 
-export { embedColors, boolToEmojiMap, memberCountVoiceChannelIDs };
+const serverBoostLevelMap = new Map<string, string>([
+	['NONE', 'no level'], // No server boosts
+	['TIER_1', 'level 1'], // Boost level 1
+	['TIER_2', 'level 2'], // Boost level 2
+	['TIER_3', 'level 3'], // Boost level 3
+	['TIER_4', 'level 4'], // Boost level 4
+]);
+
+export { embedColors, boolToEmojiMap, memberCountVoiceChannelIDs, serverBoostLevelMap };
