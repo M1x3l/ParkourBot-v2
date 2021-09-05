@@ -6,12 +6,13 @@ import {
 	updateMemberCountAll,
 	userCommands,
 } from '../Util';
+import { servers } from '../botconfig';
 
 export async function run(client: Client) {
 	logBot(client, 'Bot logged in successfully');
 
 	const guild = client.guilds.cache.filter((guild) =>
-		['774265785455083531', '796365707976900649'].includes(guild.id)
+		servers.includes(guild.id)
 	);
 
 	guild.each(async (guild) => {

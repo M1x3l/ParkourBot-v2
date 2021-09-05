@@ -21,6 +21,7 @@ import {
 	embedColors,
 	boolToEmojiMap,
 	serverBoostLevelMap,
+	servers,
 } from './botconfig';
 import { logBot } from './Loggers';
 config();
@@ -154,8 +155,9 @@ function generateUserInfoEmbed(interaction: CommandInteraction) {
 	} else {
 		guildMemberStatus = 'offline';
 	}
-	const guildMemberStatusEmoji = guildMember?.guild.emojis.cache
-		.filter((e) => e.name == guildMemberStatus)
+	const guildMemberStatusEmoji = guildMember?.client.guilds.cache
+		.get(servers[0])
+		?.emojis.cache.filter((e) => e.name == guildMemberStatus)
 		.first()
 		?.toString();
 
