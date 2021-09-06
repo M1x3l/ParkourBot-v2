@@ -6,6 +6,9 @@ export const file: UserCommandFile = {
 	name: 'User Info',
 	type: 'USER',
 	run: async (interaction: CommandInteraction) => {
-		interaction.reply({ embeds: [generateUserInfoEmbed(interaction)!] });
+		interaction.reply({
+			embeds: [generateUserInfoEmbed(interaction)!],
+			ephemeral: true,
+		});
 	},
 };
