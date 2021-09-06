@@ -1,15 +1,24 @@
 import { Client } from 'discord.js';
-import { magenta } from 'cli-color';
+import { magenta, white, blueBright } from 'cli-color';
 
-function logBot(client: Client, message: string, ...data: any[]) {
-	console.log(`[${magenta(client.user?.tag)}]: ${message}`, ...data);
-}
+const primaryClr = magenta;
+const secondaryClr = white;
+const messageClr = blueBright;
 
-function logFile(file: string, message: string, ...data: any[]) {
+export function logBot(client: Client, message: string, ...data: any[]) {
 	console.log(
-		`[${magenta(file.replace(process.cwd(), ''))}]: ${message}`,
+		`${secondaryClr('[')}${primaryClr(client.user?.tag)}${secondaryClr(
+			']: '
+		)}${messageClr(message)}`,
 		...data
 	);
 }
 
-export { logBot, logFile };
+export function logFile(file: string, message: string, ...data: any[]) {
+	console.log(
+		`${secondaryClr('[')}${primaryClr(
+			file.replace(process.cwd(), '')
+		)}${secondaryClr(']: ')}${messageClr(message)}`,
+		...data
+	);
+}
