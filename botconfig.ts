@@ -14,7 +14,7 @@ export const embedColors = [
 ];
 
 // Maps booleans to emojis
-export const boolToEmojiMap = new Map<boolean, string>([
+export const defaultBoolToEmojiMap = new Map<boolean, string>([
 	[false, ':x:'],
 	[true, ':white_check_mark:'],
 ]);

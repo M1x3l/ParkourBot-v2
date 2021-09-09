@@ -19,9 +19,9 @@ import { config } from 'dotenv';
 import {
 	memberCountVoiceChannelIDs,
 	embedColors,
-	boolToEmojiMap,
 	serverBoostLevelMap,
 	servers,
+	defaultBoolToEmojiMap,
 } from './botconfig';
 import { logBot } from './Loggers';
 config();
@@ -189,7 +189,7 @@ function generateUserInfoEmbed(interaction: CommandInteraction) {
 	);
 
 	const id = user.id;
-	const userIsBot = boolToEmojiMap.get(user.bot);
+	const userIsBot = boolToEmojiMap(interaction.guild).get(user.bot);
 
 	// Create embed
 	const embed = new MessageEmbed()
@@ -254,6 +254,27 @@ function generateServerInfoEmbed(interaction: CommandInteraction) {
 		.setTimestamp();
 	return embed;
 }
+
+// Maps booleans to emojis
+const boolToEmojiMap = (guild: Guild) => {
+	return new Map<boolean, string>([
+		[
+			false,
+			(
+				guild.emojis.cache.find((e) => e.name == 'false') ||
+				defaultBoolToEmojiMap.get(false)
+			)?.toString()!,
+		],
+		[
+			true,
+			(
+				guild.emojis.cache.find((e) => e.name == 'true') ||
+				defaultBoolToEmojiMap.get(true)
+			)?.toString()!,
+		],
+	]);
+};
+
 //#endregion
 
 export {
@@ -267,4 +288,5 @@ export {
 	createTask,
 	generateUserInfoEmbed,
 	generateServerInfoEmbed,
+	boolToEmojiMap,
 };
