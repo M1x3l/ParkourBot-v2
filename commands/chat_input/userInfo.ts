@@ -1,4 +1,4 @@
-import { ColorResolvable, CommandInteraction, MessageEmbed } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 import { ChatInputCommandFile } from '../../Types';
 import { generateUserInfoEmbed } from '../../Util';
 
