@@ -16,7 +16,6 @@ export const file: ChatInputCommandFile = {
 	run: async (interaction: CommandInteraction) => {
 		interaction.reply({
 			embeds: [generateUserInfoEmbed(interaction)!],
-			ephemeral: true,
 		});
 	},
 };
