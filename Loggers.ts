@@ -7,7 +7,9 @@ const messageClr = blueBright;
 
 export function logBot(client: Client, message: string, ...data: any[]) {
 	console.log(
-		`${secondaryClr('[')}${primaryClr(client.user?.tag)}${secondaryClr(
+		`${secondaryClr('[')}${primaryClr(
+			client.user?.tag
+		)}@${new Date().getHours()}:${new Date().getMinutes()}${secondaryClr(
 			']: '
 		)}${messageClr(message)}`,
 		...data
