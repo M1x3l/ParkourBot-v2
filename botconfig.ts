@@ -25,6 +25,11 @@ export const memberCountVoiceChannelIDs: Snowflake[] = [
 	'815221664320192522', // Bot testing server
 ];
 
+export const onlineCountVoiceChannelIDs: Snowflake[] = [
+	'885976903016648754', // Steve's Underwater Paradise
+	'885956596218363976', // Bot testing server
+];
+
 // Maps server boost levels to strings
 export const serverBoostLevelMap = new Map<PremiumTier, string>([
 	['NONE', 'no level'], // No server boosts

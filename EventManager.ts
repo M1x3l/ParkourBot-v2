@@ -4,6 +4,7 @@ import { Client } from 'discord.js';
 import * as interactionCreate from './events/interactionCreate';
 import * as guildMemberAdd from './events/guildMemberAdd';
 import * as guildMemberRemove from './events/guildMemberRemove';
+import * as presenceUpdate from './events/presenceUpdate';
 import * as ready from './events/ready';
 //#endregion
 
@@ -22,5 +23,9 @@ export function EventManager(client: Client) {
 
 	client.on('guildMemberRemove', async (member) => {
 		guildMemberRemove.run(member);
+	});
+
+	client.on('presenceUpdate', async (oldPresence, newPresence) => {
+		presenceUpdate.run(oldPresence, newPresence);
 	});
 }

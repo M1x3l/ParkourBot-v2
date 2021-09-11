@@ -22,6 +22,7 @@ import {
 	serverBoostLevelMap,
 	servers,
 	defaultBoolToEmojiMap,
+	onlineCountVoiceChannelIDs,
 } from './botconfig';
 import { logBot } from './Loggers';
 config();
@@ -81,16 +82,12 @@ async function updateMemberCount(guild: Guild) {
 
 	// Find voice channel that belongs to the guild, and update it
 	memberCountVoiceChannelIDs.forEach((id) => {
-		const channel = guild.client.channels.cache.get(id) as GuildChannel;
+		const channel = guild.channels.cache.get(id) as GuildChannel;
+		if (!channel) return;
 
-		if (channel) {
-			channel.edit({ name: generateMemberCountChannelName(channel) });
+		channel.edit({ name: generateMemberCountChannelName(channel) });
 
-			logBot(
-				guild.client,
-				`Member count updated in ${guild.name} (${guild.id})`
-			);
-		}
+		logBot(guild.client, `Member count updated in ${guild.name} (${guild.id})`);
 	});
 }
 
@@ -105,8 +102,43 @@ async function updateMemberCountAll(client: Client) {
 	logBot(client, `Member count updated in all servers`);
 }
 
+async function updateOnlineCount(guild: Guild) {
+	if (!guild.available) return;
+
+	onlineCountVoiceChannelIDs.forEach((id) => {
+		const channel = guild.channels.cache.get(id);
+		if (!channel || !(channel.type == 'GUILD_VOICE')) return;
+
+		const newName = generateOnlineCountChannelName(channel);
+		if (channel.name == newName) return;
+		channel.edit({ name: newName });
+
+		logBot(
+			guild.client,
+			`Online count updated to ${guild.presences.cache.size} in ${guild.name} (${guild.id})`
+		);
+	});
+}
+
+async function updateOnlineCountAll(client: Client) {
+	onlineCountVoiceChannelIDs.forEach((id) => {
+		const channel = client.channels.cache.get(id) as GuildChannel;
+
+		const newName = generateOnlineCountChannelName(channel);
+		if (channel.name == newName) return;
+		channel.edit({ name: newName });
+	});
+
+	logBot(client, `Online count updated in all servers`);
+}
+
 const generateMemberCountChannelName = (channel: GuildChannel) =>
 	`${channel.name.replace(/\d+/g, '').trim()} ${channel.guild.memberCount}`;
+
+const generateOnlineCountChannelName = (channel: GuildChannel) =>
+	`${channel.name.replace(/\d+/g, '').trim()} ${
+		channel.guild.presences.cache.size
+	}`;
 //#endregion
 
 //#region clickup
@@ -283,6 +315,8 @@ export {
 	messageCommands,
 	updateMemberCount,
 	updateMemberCountAll,
+	updateOnlineCount,
+	updateOnlineCountAll,
 	getTasks,
 	filterSuggestions,
 	createTask,

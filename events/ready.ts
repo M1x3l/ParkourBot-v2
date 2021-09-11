@@ -4,6 +4,7 @@ import {
 	chatInputCommands,
 	messageCommands,
 	updateMemberCountAll,
+	updateOnlineCountAll,
 	userCommands,
 } from '../Util';
 import { servers } from '../botconfig';
@@ -48,4 +49,5 @@ export async function run(client: Client) {
 	});
 
 	updateMemberCountAll(client);
+	updateOnlineCountAll(client);
 }
