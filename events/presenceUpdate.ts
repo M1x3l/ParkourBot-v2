@@ -4,6 +4,10 @@ import { updateOnlineCount } from '../Util';
 export async function run(oldPresence: Presence | null, newPresence: Presence) {
 	if (!newPresence.guild) return;
 
-	if (!oldPresence?.status || oldPresence.status != newPresence.status)
+	if (
+		!oldPresence ||
+		oldPresence.status == 'offline' ||
+		newPresence.status == 'offline'
+	)
 		updateOnlineCount(newPresence.guild);
 }
