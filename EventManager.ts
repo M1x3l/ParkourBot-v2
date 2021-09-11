@@ -1,31 +1,22 @@
 import { Client } from 'discord.js';
 
 //#region events
-import * as interactionCreate from './events/interactionCreate';
-import * as guildMemberAdd from './events/guildMemberAdd';
-import * as guildMemberRemove from './events/guildMemberRemove';
-import * as presenceUpdate from './events/presenceUpdate';
-import * as ready from './events/ready';
+import { run as interactionCreate } from './events/interactionCreate';
+import { run as guildMemberAdd } from './events/guildMemberAdd';
+import { run as guildMemberRemove } from './events/guildMemberRemove';
+import { run as presenceUpdate } from './events/presenceUpdate';
+import { run as ready } from './events/ready';
 //#endregion
 
 export function EventManager(client: Client) {
-	client.once('ready', async () => {
-		ready.run(client);
-	});
+	client
+		.once('ready', ready)
 
-	client.on('interactionCreate', async (interaction) => {
-		interactionCreate.run(interaction);
-	});
+		.on('interactionCreate', interactionCreate)
 
-	client.on('guildMemberAdd', async (member) => {
-		guildMemberAdd.run(member);
-	});
+		.on('guildMemberAdd', guildMemberAdd)
 
-	client.on('guildMemberRemove', async (member) => {
-		guildMemberRemove.run(member);
-	});
+		.on('guildMemberRemove', guildMemberRemove)
 
-	client.on('presenceUpdate', async (oldPresence, newPresence) => {
-		presenceUpdate.run(oldPresence, newPresence);
-	});
+		.on('presenceUpdate', presenceUpdate);
 }
