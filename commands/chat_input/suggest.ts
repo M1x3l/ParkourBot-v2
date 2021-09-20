@@ -19,20 +19,39 @@ export const file: ChatInputCommandFile = {
 		{
 			name: 'title',
 			description:
-				'The title for your suggestion, try to keep this as short as possible',
+				'The title for your suggestion, try to keep this as short as possible (still at least 5 characters)',
 			type: 'STRING',
 			required: true,
 		},
 		{
 			name: 'content',
 			description:
-				'The content for your suggestion, text or valid markdown ({\\n} will be replaced by a new line)',
+				'The content for your suggestion, text or valid markdown ({\\n} will be replaced by a new line) (at least 20 characters)',
 			type: 'STRING',
 			required: true,
 		},
 	],
 	run: async (interaction: CommandInteraction) => {
 		const [type, title, content] = interaction.options.data;
+
+		if (!title.value?.toString.length || title.value?.toString.length < 5) {
+			interaction.reply({
+				content: 'Title needs to at least be 5 characters long',
+				ephemeral: true,
+			});
+			return;
+		}
+
+		if (
+			!content.value?.toString.length ||
+			content.value?.toString.length < 20
+		) {
+			interaction.reply({
+				content: 'Content needs to at least be 20 characters long',
+				ephemeral: true,
+			});
+			return;
+		}
 
 		const task = await createTask({
 			name: title.value?.toString()!,
@@ -74,6 +93,5 @@ export const file: ChatInputCommandFile = {
 			],
 			ephemeral: true,
 		});
-		// console.log(task);
 	},
 };
