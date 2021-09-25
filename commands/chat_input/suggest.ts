@@ -26,7 +26,7 @@ export const file: ChatInputCommandFile = {
 		{
 			name: 'content',
 			description:
-				'The content for your suggestion, text or valid markdown ({\\n} will be replaced by a new line) (at least 20 characters)',
+				'The content for your suggestion, text or valid markdown ({\\n}=new line) (at least 20 characters)',
 			type: 'STRING',
 			required: true,
 		},

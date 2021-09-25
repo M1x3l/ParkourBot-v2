@@ -5,6 +5,7 @@ import {
 	CommandInteraction,
 	Guild,
 	GuildChannel,
+	GuildMember,
 	MessageEmbed,
 } from 'discord.js';
 import {
@@ -25,6 +26,9 @@ import {
 	onlineCountVoiceChannelIDs,
 } from './botconfig';
 import { logBot } from './Loggers';
+import {} from 'mongoose';
+import { UserGameData, UserGameModel } from './models/UserGame';
+import { white } from 'cli-color';
 config();
 
 //#region commands
@@ -139,27 +143,6 @@ const generateOnlineCountChannelName = (channel: GuildChannel) =>
 	`${channel.name.replace(/\d+/g, '').trim()} ${
 		channel.guild.presences.cache.size
 	}`;
-//#endregion
-
-//#region clickup
-const clickupClient = new (require('clickup.js'))(process.env.CLICKUP_TOKEN);
-
-async function getTasks() {
-	const output = JSON.parse(
-		(await clickupClient.lists.getTasks('78364866')).rawBody.toString()
-	);
-	return output;
-}
-
-function filterSuggestions(data: any) {
-	return data.tasks.filter((e: any) =>
-		e.tags.some((e: any) => e.name === 'suggestion')
-	);
-}
-
-async function createTask(data: Task) {
-	return clickupClient.lists.createTask('78364866', data);
-}
 //#endregion
 
 //#region commandHelpers
@@ -309,6 +292,45 @@ const boolToEmojiMap = (guild: Guild) => {
 
 //#endregion
 
+//#region clickup
+const clickupClient = new (require('clickup.js'))(process.env.CLICKUP_TOKEN);
+
+async function getTasks() {
+	const output = JSON.parse(
+		(await clickupClient.lists.getTasks('78364866')).rawBody.toString()
+	);
+	return output;
+}
+
+function filterSuggestions(data: any) {
+	return data.tasks.filter((e: any) =>
+		e.tags.some((e: any) => e.name === 'suggestion')
+	);
+}
+
+async function createTask(data: Task) {
+	return clickupClient.lists.createTask('78364866', data);
+}
+//#endregion
+
+//#region mongoose
+async function addUserGame(member: GuildMember, gameName: string) {
+	const data: UserGameData = {
+		guildID: member.guild.id,
+		userID: member.id,
+		gameName,
+	};
+
+	const doc = await UserGameModel.create(data);
+
+	doc.save();
+}
+
+async function queryUserGames(guild: Guild) {
+	return UserGameModel.find({ guildID: guild.id }).exec();
+}
+//#endregion
+
 export {
 	chatInputCommands,
 	userCommands,
@@ -323,4 +345,6 @@ export {
 	generateUserInfoEmbed,
 	generateServerInfoEmbed,
 	boolToEmojiMap,
+	addUserGame,
+	queryUserGames,
 };
