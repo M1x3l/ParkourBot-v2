@@ -1,26 +1,50 @@
 import { Client } from 'discord.js';
-import { magenta, white, blueBright } from 'cli-color';
+import { magenta, white, blueBright, redBright, bold, red } from 'cli-color';
 
-const primaryClr = magenta;
-const secondaryClr = white;
-const messageClr = blueBright;
+const primaryClrLog = magenta;
+const secondaryClrLog = white;
+const messageClrLog = blueBright;
+
+const primaryClrErr = (...text: any[]) => bold(red(...text));
+const secondaryClrErr = white;
+const messageClrErr = redBright;
 
 export function logBot(client: Client, message: string, ...data: any[]) {
 	console.log(
-		`${secondaryClr('[')}${primaryClr(
+		`${secondaryClrLog('[')}${primaryClrLog(
 			client.user?.tag
-		)}@${new Date().getHours()}:${new Date().getMinutes()}${secondaryClr(
+		)}@${new Date().getHours()}:${new Date().getMinutes()}${secondaryClrLog(
 			']: '
-		)}${messageClr(message)}`,
+		)}${messageClrLog(message)}`,
 		...data
 	);
 }
 
 export function logFile(file: string, message: string, ...data: any[]) {
 	console.log(
-		`${secondaryClr('[')}${primaryClr(
+		`${secondaryClrLog('[')}${primaryClrLog(
 			file.replace(process.cwd(), '')
-		)}${secondaryClr(']: ')}${messageClr(message)}`,
+		)}${secondaryClrLog(']: ')}${messageClrLog(message)}`,
+		...data
+	);
+}
+
+export function errBot(client: Client, message: string, ...data: any[]) {
+	console.log(
+		`${secondaryClrErr('[')}${primaryClrErr(
+			client.user?.tag
+		)}@${new Date().getHours()}:${new Date().getMinutes()}${secondaryClrErr(
+			']: '
+		)}${messageClrErr(message)}`,
+		...data
+	);
+}
+
+export function errFile(file: string, message: string, ...data: any[]) {
+	console.log(
+		`${secondaryClrErr('[')}${primaryClrErr(
+			file.replace(process.cwd(), '')
+		)}${secondaryClrErr(']: ')}${messageClrErr(message)}`,
 		...data
 	);
 }
