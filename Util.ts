@@ -3,9 +3,8 @@ import {
 	Collection,
 	ColorResolvable,
 	CommandInteraction,
+	ContextMenuInteraction,
 	Guild,
-	GuildChannel,
-	GuildMember,
 	MessageEmbed,
 } from 'discord.js';
 import {
@@ -18,17 +17,13 @@ import { readdir } from 'fs';
 import { join } from 'path';
 import { config } from 'dotenv';
 import {
-	memberCountVoiceChannelIDs,
 	embedColors,
 	serverBoostLevelMap,
 	servers,
 	defaultBoolToEmojiMap,
-	onlineCountVoiceChannelIDs,
 } from './botconfig';
 import { logBot } from './Loggers';
 import {} from 'mongoose';
-import { UserGameData, UserGameModel } from './models/UserGame';
-import { white } from 'cli-color';
 config();
 
 //#region commands
@@ -79,74 +74,10 @@ readdir(join(__dirname, 'commands', 'user'), (err, files) => {
 
 //#endregion
 
-//#region updateMemberCount
-async function updateMemberCount(guild: Guild) {
-	// Check if the guild is available
-	if (!guild.available) return;
-
-	// Find voice channel that belongs to the guild, and update it
-	memberCountVoiceChannelIDs.forEach((id) => {
-		const channel = guild.channels.cache.get(id) as GuildChannel;
-		if (!channel) return;
-
-		channel.edit({ name: generateMemberCountChannelName(channel) });
-
-		logBot(guild.client, `Member count updated in ${guild.name} (${guild.id})`);
-	});
-}
-
-async function updateMemberCountAll(client: Client) {
-	// Iterate through all voice channels and update them (as defined in botconfig.ts)
-	memberCountVoiceChannelIDs.forEach((id) => {
-		const channel = client.channels.cache.get(id) as GuildChannel;
-
-		channel.edit({ name: generateMemberCountChannelName(channel) });
-	});
-
-	logBot(client, `Member count updated in all servers`);
-}
-
-async function updateOnlineCount(guild: Guild) {
-	if (!guild.available) return;
-
-	onlineCountVoiceChannelIDs.forEach((id) => {
-		const channel = guild.channels.cache.get(id);
-		if (!channel || !(channel.type == 'GUILD_VOICE')) return;
-
-		const newName = generateOnlineCountChannelName(channel);
-		if (channel.name == newName) return;
-		channel.edit({ name: newName });
-
-		logBot(
-			guild.client,
-			`Online count updated to ${guild.presences.cache.size} in ${guild.name} (${guild.id})`
-		);
-	});
-}
-
-async function updateOnlineCountAll(client: Client) {
-	onlineCountVoiceChannelIDs.forEach((id) => {
-		const channel = client.channels.cache.get(id) as GuildChannel;
-
-		const newName = generateOnlineCountChannelName(channel);
-		if (channel.name == newName) return;
-		channel.edit({ name: newName });
-	});
-
-	logBot(client, `Online count updated in all servers`);
-}
-
-const generateMemberCountChannelName = (channel: GuildChannel) =>
-	`${channel.name.replace(/\d+/g, '').trim()} ${channel.guild.memberCount}`;
-
-const generateOnlineCountChannelName = (channel: GuildChannel) =>
-	`${channel.name.replace(/\d+/g, '').trim()} ${
-		channel.guild.presences.cache.size
-	}`;
-//#endregion
-
 //#region commandHelpers
-function generateUserInfoEmbed(interaction: CommandInteraction) {
+function generateUserInfoEmbed(
+	interaction: ContextMenuInteraction | CommandInteraction
+) {
 	if (!interaction.guild?.available) return;
 
 	let user;
@@ -224,10 +155,10 @@ function generateUserInfoEmbed(interaction: CommandInteraction) {
 		)
 		.addField('\u200b', '_ _')
 		.setThumbnail(user.avatarURL() as unknown as string)
-		.setFooter(
-			interaction.guild.name,
-			interaction.guild.iconURL() as unknown as string
-		)
+		.setFooter({
+			text: interaction.guild.name,
+			iconURL: interaction.guild.iconURL() as unknown as string,
+		})
 		.setTimestamp();
 	return embed;
 }
@@ -263,9 +194,9 @@ function generateServerInfoEmbed(interaction: CommandInteraction) {
 		.addField('\u200b', '_ _')
 		.setThumbnail(guild.iconURL() as unknown as string)
 		.setFooter(
-			interaction.guild.name,
-			interaction.guild.iconURL() as unknown as string
-		)
+			{text:interaction.guild.name,
+			iconURL:interaction.guild.iconURL() as unknown as string
+		})
 		.setTimestamp();
 	return embed;
 }
@@ -313,38 +244,14 @@ async function createTask(data: Task) {
 }
 //#endregion
 
-//#region mongoose
-async function addUserGame(member: GuildMember, gameName: string) {
-	const data: UserGameData = {
-		guildID: member.guild.id,
-		userID: member.id,
-		gameName,
-	};
-
-	const doc = await UserGameModel.create(data);
-
-	doc.save();
-}
-
-async function queryUserGames(guild: Guild) {
-	return UserGameModel.find({ guildID: guild.id }).exec();
-}
-//#endregion
-
 export {
 	chatInputCommands,
 	userCommands,
 	messageCommands,
-	updateMemberCount,
-	updateMemberCountAll,
-	updateOnlineCount,
-	updateOnlineCountAll,
 	getTasks,
 	filterSuggestions,
 	createTask,
 	generateUserInfoEmbed,
 	generateServerInfoEmbed,
 	boolToEmojiMap,
-	addUserGame,
-	queryUserGames,
 };

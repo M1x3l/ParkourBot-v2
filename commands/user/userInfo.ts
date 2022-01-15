@@ -5,7 +5,7 @@ import { generateUserInfoEmbed } from '../../Util';
 export const file: UserCommandFile = {
 	name: 'User Info',
 	type: 'USER',
-	run: async (interaction: CommandInteraction) => {
+	run: async (interaction) => {
 		interaction.reply({
 			embeds: [generateUserInfoEmbed(interaction)!],
 			ephemeral: true,

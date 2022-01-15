@@ -1,16 +1,7 @@
 import { Client } from 'discord.js';
-import { errBot, logBot } from '../Loggers';
-import {
-	addUserGame,
-	chatInputCommands,
-	messageCommands,
-	queryUserGames,
-	updateMemberCountAll,
-	updateOnlineCountAll,
-	userCommands,
-} from '../Util';
+import { logBot } from '../Loggers';
+import { chatInputCommands, messageCommands, userCommands } from '../Util';
 import { servers } from '../botconfig';
-import mongoose from 'mongoose';
 
 export async function run(client: Client) {
 	logBot(client, 'Bot logged in successfully');
@@ -20,7 +11,7 @@ export async function run(client: Client) {
 	);
 
 	guild.each(async (guild) => {
-		// await guild.commands.set([]);
+		await guild.commands.set([]);
 
 		chatInputCommands.each((command) => {
 			guild.commands.create({
@@ -50,16 +41,4 @@ export async function run(client: Client) {
 	client.user?.setActivity("over Steve's server because I can :)", {
 		type: 'WATCHING',
 	});
-
-	updateMemberCountAll(client);
-	updateOnlineCountAll(client);
-
-	if (process.env.MONGO_URI_USERGAMES)
-		try {
-			await mongoose.connect(process.env.MONGO_URI_USERGAMES);
-			logBot(client, 'Connected to MongoDB');
-			process.env.MONGO_CONNECTED = 'true';
-		} catch (err) {
-			errBot(client, 'Error connecting to MongoDB\n', err);
-		}
 }

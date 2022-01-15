@@ -3,13 +3,14 @@ import {
 	MessageApplicationCommandData,
 	UserApplicationCommandData,
 	ChatInputApplicationCommandData,
+	ContextMenuInteraction,
 } from 'discord.js';
 
 export interface MessageCommandFile extends MessageApplicationCommandData {
 	run: (interaction: CommandInteraction) => Promise<void>;
 }
 export interface UserCommandFile extends UserApplicationCommandData {
-	run: (interaction: CommandInteraction) => Promise<void>;
+	run: (interaction: ContextMenuInteraction) => Promise<void>;
 }
 export interface ChatInputCommandFile extends ChatInputApplicationCommandData {
 	run: (interaction: CommandInteraction) => Promise<void>;

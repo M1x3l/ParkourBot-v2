@@ -1,29 +1,29 @@
 {
-  "name": "parkourbot-v2",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.ts",
-  "dependencies": {
-    "@types/cli-color": "^2.0.1",
-    "cli-color": "^2.0.0",
-    "clickup.js": "^2.1.0",
-    "discord.js": "^13.1.0",
-    "dotenv": "^10.0.0",
-    "mongoose": "^6.0.7",
-    "typescript": "^4.3.5"
-  },
-  "scripts": {
-    "test": "nodemon .\\\\built\\\\index.js",
-    "start": "nodemon built/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/M1x3l/ParkourBot-v2.git"
-  },
-  "author": "M1x3l and Steveplays28",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/M1x3l/ParkourBot-v2/issues"
-  },
-  "homepage": "https://github.com/M1x3l/ParkourBot-v2#readme"
+	"name": "parkourbot-v2",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.ts",
+	"dependencies": {
+		"@types/cli-color": "^2.0.1",
+		"cli-color": "^2.0.0",
+		"clickup.js": "^2.1.0",
+		"discord.js": "^13.1.0",
+		"dotenv": "^10.0.0",
+		"mongoose": "^6.0.7",
+		"typescript": "^4.3.5"
+	},
+	"scripts": {
+		"test": "nodemon .\\\\built\\\\index.js",
+		"start": "nodemon --exec 'node built/index.js'"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/M1x3l/ParkourBot-v2.git"
+	},
+	"author": "M1x3l and Steveplays28",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/M1x3l/ParkourBot-v2/issues"
+	},
+	"homepage": "https://github.com/M1x3l/ParkourBot-v2#readme"
 }

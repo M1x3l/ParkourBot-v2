@@ -32,10 +32,10 @@ export const file: ChatInputCommandFile = {
 			.setTitle(`Roundtrip latency: ${latency}ms`)
 			.setDescription(`${latencyText}`)
 			.addField('\u200B', '_ _')
-			.setFooter(
-				interaction.guild.name,
-				interaction.guild.iconURL() as unknown as string
-			)
+			.setFooter({
+				text: interaction.guild.name,
+				iconURL: interaction.guild.iconURL() as unknown as string,
+			})
 			.setTimestamp();
 
 		interaction.reply({
