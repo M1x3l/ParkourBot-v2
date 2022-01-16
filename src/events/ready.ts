@@ -11,7 +11,7 @@ export async function run(client: Client) {
 	);
 
 	guild.each(async (guild) => {
-		await guild.commands.set([]);
+		// await guild.commands.set([]);
 
 		chatInputCommands.each((command) => {
 			guild.commands.create({
