@@ -7,6 +7,8 @@ const client = new Client({
 	intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_MESSAGES', 'GUILD_PRESENCES'],
 });
 
-EventManager(client);
+(async () => {
+	await client.login(process.env.TOKEN);
 
-client.login(process.env.TOKEN);
+	EventManager(client);
+})();

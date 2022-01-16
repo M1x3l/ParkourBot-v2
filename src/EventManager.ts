@@ -1,13 +1,14 @@
 import { Client } from 'discord.js';
-
-//#region events
-import { run as interactionCreate } from './events/interactionCreate';
-import { run as ready } from './events/ready';
-//#endregion
+import { readdirSync } from 'fs';
+import { join } from 'path';
+import { logBot } from './Loggers';
 
 export function EventManager(client: Client) {
-	client
-		.once('ready', ready)
+	const events = readdirSync(join(__dirname, 'events'));
 
-		.on('interactionCreate', interactionCreate);
+	events.forEach((event) => {
+		event = event.replace(/\.js$/, '');
+		client.on(event, require(`./events/${event}`).run),
+			logBot(client, `Registered '${event}' event`);
+	});
 }
